@@ -8,7 +8,7 @@ export const config = {
   basePath: process.env.BASE_PATH ?? '',
   lang: 'ko',
   author: 'CalcMate',
-  contactEmail: 'aitkd2020@gmail.com',
+  contactEmail: '1122yukh@gmail.com',
 
   // TODO: 애드센스 승인 후 게시자 ID 입력 (예: 'ca-pub-1234567890123456'). 비어 있으면 광고 코드가 삽입되지 않음.
   adsenseClient: process.env.ADSENSE_CLIENT || '',
