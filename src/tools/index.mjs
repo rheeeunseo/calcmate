@@ -8,4 +8,15 @@ import { tool as severance } from './severance.mjs';
 import { tool as vat } from './vat.mjs';
 import { tool as parttime } from './parttime.mjs';
 import { tool as leave } from './leave.mjs';
-export const tools = [salary, loan, parttime, savings, deposit, severance, leave, compound, vat];
+import { tool as acquisition } from './acquisition.mjs';
+import { tool as capitalgains } from './capitalgains.mjs';
+import { tool as brokerage } from './brokerage.mjs';
+import { tool as jeonse } from './jeonse.mjs';
+import { tool as dsr } from './dsr.mjs';
+export const tools = [salary, loan, parttime, savings, deposit, severance, leave, compound, vat, acquisition, capitalgains, brokerage, jeonse, dsr];
+// 홈 화면 그룹
+export const groups = [
+  { title: '급여·세금', slugs: ['salary', 'parttime', 'leave', 'severance', 'vat'] },
+  { title: '대출·저축', slugs: ['loan', 'dsr', 'savings', 'deposit', 'compound'] },
+  { title: '부동산', slugs: ['acquisition-tax', 'capital-gains-tax', 'brokerage', 'jeonse'] },
+];

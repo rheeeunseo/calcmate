@@ -256,6 +256,89 @@
         "compound"
       ],
       "status": "pending"
+    },
+    {
+      "slug": "chwideukse-saengae-choecho-gammyeon-2026",
+      "title": "생애최초 주택 취득세 감면 2026년 조건과 신청 방법",
+      "relatedTools": [
+        "acquisition-tax"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "ilsijeok-2jutaek-chwideukse-yangdose",
+      "title": "일시적 2주택 취득세·양도세 특례 조건 총정리",
+      "relatedTools": [
+        "acquisition-tax",
+        "capital-gains-tax"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "1sedae-1jutaek-bigwase-12eok",
+      "title": "1세대 1주택 양도세 비과세 12억 초과분 계산 방법",
+      "relatedTools": [
+        "capital-gains-tax"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "janggiboyu-teukbyeolgongje-gyesan",
+      "title": "장기보유특별공제 계산법 - 보유·거주기간별 공제율표",
+      "relatedTools": [
+        "capital-gains-tax"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "junggae-susuryo-hyeopsang-bangbeop",
+      "title": "부동산 중개수수료 협상 방법과 부가세 확인 요령",
+      "relatedTools": [
+        "brokerage"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "wolse-junggae-susuryo-gyesan",
+      "title": "월세 중개수수료 계산법 - 보증금 환산 공식",
+      "relatedTools": [
+        "brokerage"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "jeonse-vs-wolse-2026-bigyo",
+      "title": "2026년 전세 vs 월세, 대출금리와 전환율로 비교하기",
+      "relatedTools": [
+        "jeonse",
+        "loan"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "stress-dsr-3dangye-hando",
+      "title": "스트레스 DSR 3단계 적용 후 연소득별 대출한도 변화",
+      "relatedTools": [
+        "dsr"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "jutaek-guip-chong-biyong-5eok",
+      "title": "5억 아파트 살 때 총 비용 - 취득세·복비·법무사·채권",
+      "relatedTools": [
+        "acquisition-tax",
+        "brokerage"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "yangdose-pilyogyeongbi-injeong-hangmok",
+      "title": "양도세 필요경비로 인정되는 항목과 증빙 방법",
+      "relatedTools": [
+        "capital-gains-tax"
+      ],
+      "status": "pending"
     }
   ]
 }

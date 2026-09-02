@@ -1,15 +1,18 @@
 import { ad, esc, base, breadcrumb } from '../lib/html.mjs';
+import { groups } from '../tools/index.mjs';
 
 const home = ({ config, tools, articles }) => ({
   path: '/', priority: 1.0,
   title: `${config.siteName} - 연봉 실수령액·대출·적금·퇴직금 계산기`,
-  description: '2026년 연봉 실수령액, 대출 이자, 알바 월급·주휴수당, 연차, 적금·예금 이자, 퇴직금, 부가세, 복리 계산기를 무료로 제공합니다. 광고 없이 빠르고 정확한 금융 계산.',
+  description: '2026년 연봉 실수령액, 대출 이자, 취득세·양도세·중개수수료, 알바 월급, 연차, 적금·예금, 퇴직금, 부가세 계산기를 무료로 제공합니다. 광고 없이 빠르고 정확한 금융 계산.',
   jsonld: { '@context': 'https://schema.org', '@type': 'WebSite', name: config.siteName, url: config.siteUrl + base + '/', inLanguage: 'ko' },
   content: `<h1>${config.siteName} 금융 계산기</h1><p class="lead">연봉, 대출, 적금, 퇴직금까지. 필요한 계산을 3초 안에.</p>
-<div class="tool-grid">${tools.map((t) => `<a href="${base}/${t.slug}/"><div class="t">${esc(t.name)}</div><div class="d">${esc(t.short)}</div></a>`).join('')}</div>
+${groups.map((g) => `<h2>${g.title}</h2><div class="tool-grid">${g.slugs.map((s) => tools.find((t) => t.slug === s)).filter(Boolean).map((t) => `<a href="${base}/${t.slug}/"><div class="t">${esc(t.name)}</div><div class="d">${esc(t.short)}</div></a>`).join('')}</div>`).join('')}
 ${ad('top')}
 <h2>인기 검색: 연봉별 실수령액</h2>
 <div class="pill-list">${[2800, 3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 10000].map((a) => `<a href="${base}/salary/${a}/">연봉 ${a >= 10000 ? '1억' : a.toLocaleString() + '만'}</a>`).join('')}</div>
+<h2>매매가별 취득세·중개수수료</h2>
+<div class="pill-list">${[30000, 50000, 70000, 100000, 150000].map((a) => `<a href="${base}/acquisition-tax/${a}/">${a / 10000}억 취득세</a>`).join('')}${[30000, 50000, 100000].map((a) => `<a href="${base}/brokerage/${a}/">${a / 10000}억 중개수수료</a>`).join('')}</div>
 <h2>대출 금액별 월 상환액</h2>
 <div class="pill-list">${[5000, 10000, 20000, 30000, 50000].map((a) => `<a href="${base}/loan/${a}/">${a >= 10000 ? a / 10000 + '억' : a.toLocaleString() + '만'}원 대출</a>`).join('')}</div>
 ${articles.length ? `<h2>금융 가이드</h2><div class="post-list">${articles.slice(0, 5).map((a) => `<a href="${base}/blog/${a.slug}/"><div class="t">${esc(a.title)}</div><div class="d">${esc(a.description)}</div></a>`).join('')}</div><p><a href="${base}/blog/">전체 글 보기 →</a></p>` : ''}`,
