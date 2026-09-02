@@ -41,7 +41,7 @@ node scripts/serve.mjs  # http://localhost:8080
 1. GitHub 에 저장소 생성 후 push (`main` 브랜치)
 2. 저장소 **Settings → Pages → Source: GitHub Actions**
 3. **Settings → Secrets and variables → Actions**
-   - Variables: `SITE_URL` (예 `https://<id>.github.io/calcmate`), `BASE_PATH` (`/calcmate`, 커스텀 도메인이면 비움)
+   - Variables: `SITE_URL` (예 `https://<id>.github.io`, 커스텀 도메인이면 `https://도메인`), `BASE_PATH` (`/calcmate`, 커스텀 도메인이면 비움)
    - Secrets: `ANTHROPIC_API_KEY` (자동 글 생성용)
 4. push 하면 자동 빌드·배포. 커스텀 도메인은 루트에 `CNAME` 파일 추가 + DNS 설정
 
