@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{canonical}}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:site_name" content="{{siteName}}">
+<meta name="twitter:card" content="summary">
+{{verification}}
+<link rel="icon" href="{{base}}/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{{base}}/style.css">
+{{adsenseHead}}
+{{jsonld}}
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="{{base}}/">{{siteName}}</a>
+    <nav class="nav">
+      <a href="{{base}}/salary/">연봉 실수령액</a>
+      <a href="{{base}}/loan/">대출 계산</a>
+      <a href="{{base}}/savings/">적금</a>
+      <a href="{{base}}/deposit/">예금</a>
+      <a href="{{base}}/severance/">퇴직금</a>
+      <a href="{{base}}/blog/">금융 가이드</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+{{content}}
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><strong>{{siteName}}</strong> — {{tagline}}</p>
+    <p class="muted">본 사이트의 계산 결과는 참고용이며 실제 금액은 개인 상황, 회사 규정, 금융기관 정책에 따라 달라질 수 있습니다.</p>
+    <p class="muted">이 사이트는 쿠팡파트너스 활동의 일환으로 일정액의 수수료를 제공받을 수 있습니다.</p>
+    <p class="links"><a href="{{base}}/about/">소개</a> · <a href="{{base}}/privacy/">개인정보처리방침</a> · <a href="{{base}}/contact/">문의</a></p>
+    <p class="muted">© {{year}} {{siteName}}</p>
+  </div>
+</footer>
+{{scripts}}
+</body>
+</html>

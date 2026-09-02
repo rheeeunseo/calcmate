@@ -1,0 +1,31 @@
+name: Weekly Article (Claude)
+on:
+  schedule:
+    - cron: '0 0 * * 1,4'   # 매주 월·목 09:00 KST
+  workflow_dispatch:
+    inputs:
+      count:
+        description: '생성할 글 수'
+        default: '1'
+permissions:
+  contents: write
+jobs:
+  article:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Generate article
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}   # Settings > Secrets 에 등록
+          ARTICLE_MODEL: ${{ vars.ARTICLE_MODEL }}
+        run: node scripts/generate-article.mjs --count ${{ github.event.inputs.count || 1 }}
+      - name: Verify build
+        run: node build.mjs
+      - name: Commit & push
+        run: |
+          git config user.name "calcmate-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add content/
+          git diff --cached --quiet && echo "변경 없음" || (git commit -m "content: auto article $(date +%F)" && git push)

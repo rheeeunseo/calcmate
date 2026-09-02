@@ -1,0 +1,14 @@
+{
+  "name": "calcmate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "한국어 금융·생활 계산기 모음 - 정적 사이트, 의존성 없음",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs && node scripts/serve.mjs",
+    "serve": "node scripts/serve.mjs",
+    "article": "node scripts/generate-article.mjs"
+  },
+  "engines": { "node": ">=20" }
+}

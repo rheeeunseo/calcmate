@@ -1,0 +1,126 @@
+{
+  "_comment": "자동 발행 주제 큐. scripts/generate-article.mjs 가 status=pending 인 첫 항목을 골라 글을 생성하고 done 으로 바꿉니다. 주제는 검색량 있는 롱테일 위주로 추가하세요.",
+  "topics": [
+    {
+      "slug": "2026-4dae-boheom-yoyul",
+      "title": "2026년 4대보험 요율 총정리 - 국민연금 인상 반영 실수령액 변화",
+      "relatedTools": [
+        "salary"
+      ],
+      "status": "done"
+    },
+    {
+      "slug": "yeonbong-3000-vs-3500-silsuryeong",
+      "title": "연봉 3000만원과 3500만원 실수령액 차이, 세금은 얼마나 더 낼까",
+      "relatedTools": [
+        "salary"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "sinip-sawon-wolgeup-gongje-hangmok",
+      "title": "신입사원 첫 월급 공제 항목 완벽 해설 - 급여명세서 읽는 법",
+      "relatedTools": [
+        "salary"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "jutaek-dambo-daechul-wolli-vs-wongeum",
+      "title": "주택담보대출 원리금균등 vs 원금균등, 3억 기준 총이자 비교",
+      "relatedTools": [
+        "loan"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "jeonse-daechul-iza-gyesan",
+      "title": "전세대출 이자 계산법과 월 부담액 - 2억 전세 기준",
+      "relatedTools": [
+        "loan"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "jeokgeum-vs-yegeum-eoneu-jjok",
+      "title": "적금 vs 예금, 1000만원 모을 때 어느 쪽이 이자가 많을까",
+      "relatedTools": [
+        "savings",
+        "deposit"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "toejikgeum-jungganjeongsan-jogeon",
+      "title": "퇴직금 중간정산 가능한 조건 6가지와 신청 방법",
+      "relatedTools": [
+        "severance"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "toejikgeum-irp-segeum-jeolgam",
+      "title": "퇴직금 IRP 로 받으면 세금 얼마나 줄어들까 - 실제 계산",
+      "relatedTools": [
+        "severance"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "freelancer-bugase-singo-cheoeum",
+      "title": "프리랜서 부가세 신고 처음 하는 법 - 간이과세 vs 일반과세",
+      "relatedTools": [
+        "vat"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "wol-50man-jeokripsik-30nyeon",
+      "title": "월 50만원 적립식 투자 30년 하면 얼마가 될까 - 수익률별 시뮬레이션",
+      "relatedTools": [
+        "compound"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "yeonmaljeongsan-hwangeup-neullineun-gongje",
+      "title": "연말정산 환급 늘리는 공제 항목 10가지 (2026년 귀속)",
+      "relatedTools": [
+        "salary"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "geumri-inha-yoguggwon-sincheong",
+      "title": "금리인하요구권 신청 방법과 성공률 높이는 팁",
+      "relatedTools": [
+        "loan"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "cheongnyeon-doyak-gyejwa-2026",
+      "title": "청년도약계좌 2026년 조건과 만기 수령액 계산",
+      "relatedTools": [
+        "savings"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "yeonbong-hyeopsang-silsuryeong-gijun",
+      "title": "연봉 협상할 때 실수령액 기준으로 계산해야 하는 이유",
+      "relatedTools": [
+        "salary"
+      ],
+      "status": "pending"
+    },
+    {
+      "slug": "daechul-jungdosanghwan-susuryo",
+      "title": "대출 중도상환수수료 계산과 갈아타기 손익분기점",
+      "relatedTools": [
+        "loan"
+      ],
+      "status": "pending"
+    }
+  ]
+}
