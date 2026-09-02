@@ -13,10 +13,11 @@ import { tool as capitalgains } from './capitalgains.mjs';
 import { tool as brokerage } from './brokerage.mjs';
 import { tool as jeonse } from './jeonse.mjs';
 import { tool as dsr } from './dsr.mjs';
-export const tools = [salary, loan, parttime, savings, deposit, severance, leave, compound, vat, acquisition, capitalgains, brokerage, jeonse, dsr];
+import { tool as homecost } from './homecost.mjs';
+export const tools = [salary, loan, parttime, savings, deposit, severance, leave, compound, vat, acquisition, capitalgains, brokerage, jeonse, dsr, homecost];
 // 홈 화면 그룹
 export const groups = [
   { title: '급여·세금', slugs: ['salary', 'parttime', 'leave', 'severance', 'vat'] },
   { title: '대출·저축', slugs: ['loan', 'dsr', 'savings', 'deposit', 'compound'] },
-  { title: '부동산', slugs: ['acquisition-tax', 'capital-gains-tax', 'brokerage', 'jeonse'] },
+  { title: '부동산', slugs: ['home-cost', 'acquisition-tax', 'capital-gains-tax', 'brokerage', 'jeonse'] },
 ];

@@ -11,6 +11,8 @@ ${groups.map((g) => `<h2>${g.title}</h2><div class="tool-grid">${g.slugs.map((s)
 ${ad('top')}
 <h2>인기 검색: 연봉별 실수령액</h2>
 <div class="pill-list">${[2800, 3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 10000].map((a) => `<a href="${base}/salary/${a}/">연봉 ${a >= 10000 ? '1억' : a.toLocaleString() + '만'}</a>`).join('')}</div>
+<h2>매매가별 내 집 마련 비용</h2>
+<div class="pill-list">${[30000, 50000, 70000, 100000, 150000].map((a) => `<a href="${base}/home-cost/${a}/">${a / 10000}억 아파트 총비용</a>`).join('')}</div>
 <h2>매매가별 취득세·중개수수료</h2>
 <div class="pill-list">${[30000, 50000, 70000, 100000, 150000].map((a) => `<a href="${base}/acquisition-tax/${a}/">${a / 10000}억 취득세</a>`).join('')}${[30000, 50000, 100000].map((a) => `<a href="${base}/brokerage/${a}/">${a / 10000}억 중개수수료</a>`).join('')}</div>
 <h2>대출 금액별 월 상환액</h2>

@@ -143,3 +143,36 @@ export function calcCapitalGainsTax({ salePrice, buyPrice, expenses = 0, holdYea
   const local = Math.floor(tax * 0.1);
   return { gain, exemptGain, taxableGain, ltRate, ltDeduction, basic, taxBase, tax, local, total: tax + local, rateLabel, note, netProceeds: salePrice - buyPrice - expenses - tax - local };
 }
+
+// ---- 내 집 마련 총비용 (통합) ----
+import { monthlyPayment } from './loan.mjs';
+/**
+ * @param {object} p
+ * @param {number} p.price      매매가
+ * @param {number} p.income     연소득
+ * @param {number} [p.cash]     보유 현금 (0 이면 미입력)
+ * @param {number} [p.rate]     대출 금리 %
+ * @param {number} [p.years]    만기
+ * @param {number} [p.ltv]      LTV %
+ * @param {number} [p.stress]   스트레스 가산 %p
+ * @param {number} [p.existingAnnual] 기존 대출 연 원리금
+ * @param {boolean} [p.large]   85㎡ 초과
+ * @param {boolean} [p.firstHome] 생애최초
+ * @param {number} [p.loanWanted] 희망 대출액 (0 = 최대)
+ */
+export function calcHomeCost({ price, income, cash = 0, rate = 4, years = 30, ltv = 70, stress = 1.5, existingAnnual = 0, large = false, firstHome = false, loanWanted = 0 }) {
+  const acq = calcAcquisitionTax({ price, large, firstHome });
+  const brk = calcBrokerage({ deal: 'sale', price });
+  const legal = 400_000;                                   // 법무사 등기 대행 (셀프등기 시 0)
+  const stamp = price > 1e9 ? 350_000 : price > 1e8 ? 150_000 : 0; // 인지세
+  const bond = Math.round(price * 0.7 * 0.021 * 0.1 / 1000) * 1000; // 국민주택채권: 시가표준(≈70%) × 매입률(≈2.1%) × 할인율(≈10%) 근사
+  const otherCosts = legal + stamp + bond;
+  const purchaseCosts = acq.total + brk.total + otherCosts;
+  const dsr = calcDsrLimit({ income, rate, years, stress, existingAnnual, price, ltv });
+  const loan = loanWanted > 0 ? Math.min(loanWanted, dsr.limit) : dsr.limit;
+  const pmt = loan > 0 ? monthlyPayment(loan, rate, years * 12) : 0;
+  const totalInterest = pmt * years * 12 - loan;
+  const cashNeeded = price - loan + purchaseCosts;
+  const burden = income > 0 ? pmt / (income / 12) : 0;
+  return { price, acq, brk, legal, stamp, bond, otherCosts, purchaseCosts, dsr, loan, pmt, totalInterest, cashNeeded, burden, cashGap: cash > 0 ? cash - cashNeeded : null, monthlyIncome: income / 12 };
+}
