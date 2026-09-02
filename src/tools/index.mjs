@@ -6,4 +6,6 @@ import { tool as deposit } from './deposit.mjs';
 import { tool as compound } from './compound.mjs';
 import { tool as severance } from './severance.mjs';
 import { tool as vat } from './vat.mjs';
-export const tools = [salary, loan, savings, deposit, severance, compound, vat];
+import { tool as parttime } from './parttime.mjs';
+import { tool as leave } from './leave.mjs';
+export const tools = [salary, loan, parttime, savings, deposit, severance, leave, compound, vat];

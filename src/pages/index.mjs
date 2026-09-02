@@ -3,7 +3,7 @@ import { ad, esc, base, breadcrumb } from '../lib/html.mjs';
 const home = ({ config, tools, articles }) => ({
   path: '/', priority: 1.0,
   title: `${config.siteName} - 연봉 실수령액·대출·적금·퇴직금 계산기`,
-  description: '2026년 연봉 실수령액, 대출 이자, 적금·예금 이자, 퇴직금, 부가세, 복리 계산기를 무료로 제공합니다. 광고 없이 빠르고 정확한 금융 계산.',
+  description: '2026년 연봉 실수령액, 대출 이자, 알바 월급·주휴수당, 연차, 적금·예금 이자, 퇴직금, 부가세, 복리 계산기를 무료로 제공합니다. 광고 없이 빠르고 정확한 금융 계산.',
   jsonld: { '@context': 'https://schema.org', '@type': 'WebSite', name: config.siteName, url: config.siteUrl + base + '/', inLanguage: 'ko' },
   content: `<h1>${config.siteName} 금융 계산기</h1><p class="lead">연봉, 대출, 적금, 퇴직금까지. 필요한 계산을 3초 안에.</p>
 <div class="tool-grid">${tools.map((t) => `<a href="${base}/${t.slug}/"><div class="t">${esc(t.name)}</div><div class="d">${esc(t.short)}</div></a>`).join('')}</div>

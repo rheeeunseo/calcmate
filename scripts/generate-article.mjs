@@ -21,7 +21,7 @@ const queue = topics.topics.filter((t) => ONLY ? t.slug === ONLY : t.status === 
 if (!queue.length) { console.log('발행할 pending 주제가 없습니다. content/topics.json 에 주제를 추가하세요.'); process.exit(0); }
 
 const today = new Date().toISOString().slice(0, 10);
-const toolLinks = { salary: '연봉 실수령액 계산기 → ../../salary/', loan: '대출 이자 계산기 → ../../loan/', savings: '적금 이자 계산기 → ../../savings/', deposit: '예금 이자 계산기 → ../../deposit/', severance: '퇴직금 계산기 → ../../severance/', vat: '부가세 계산기 → ../../vat/', compound: '복리 계산기 → ../../compound/' };
+const toolLinks = { salary: '연봉 실수령액 계산기 → ../../salary/', loan: '대출 이자 계산기 → ../../loan/', savings: '적금 이자 계산기 → ../../savings/', deposit: '예금 이자 계산기 → ../../deposit/', severance: '퇴직금 계산기 → ../../severance/', vat: '부가세 계산기 → ../../vat/', compound: '복리 계산기 → ../../compound/', parttime: '알바 월급 계산기 → ../../parttime/', leave: '연차 계산기 → ../../leave/' };
 
 const SYSTEM = `당신은 한국 개인 금융 전문 에디터입니다. 검색 유입을 목표로 하는 블로그 글을 씁니다.
 규칙:
