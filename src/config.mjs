@@ -18,9 +18,9 @@ export const config = {
   // TODO: 쿠팡파트너스 승인 후 파트너 ID/링크 입력. 비어 있으면 제휴 박스 미노출.
   coupangPartnerId: process.env.COUPANG_PARTNER_ID || '',
 
-  // TODO: 검색엔진 소유 확인용 메타 태그 값
+  // 검색엔진 소유 확인용 메타 태그 값 (구글은 DNS TXT 로 확인 완료)
   googleSiteVerification: '',
-  naverSiteVerification: '',
+  naverSiteVerification: 'b5d5d2ca6ac828678205a29b6da03d4182829e66',
 
   // 자동 콘텐츠 생성 (scripts/generate-article.mjs)
   articleModel: process.env.ARTICLE_MODEL || 'claude-sonnet-5',
