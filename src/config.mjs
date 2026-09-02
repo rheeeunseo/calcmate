@@ -2,8 +2,8 @@
 export const config = {
   siteName: 'CalcMate',
   tagline: '연봉·대출·적금·퇴직금 계산기',
-  // TODO: 실제 도메인으로 교체 (예: https://calcmate.kr). 끝에 슬래시 없이.
-  siteUrl: process.env.SITE_URL || 'https://example.github.io/calcmate',
+  // 실제 도메인 (끝에 슬래시 없이)
+  siteUrl: process.env.SITE_URL || 'https://calcmate.co.kr',
   // GitHub Pages 프로젝트 저장소로 배포하면 '/calcmate', 커스텀 도메인이면 ''.
   basePath: process.env.BASE_PATH ?? '',
   lang: 'ko',
