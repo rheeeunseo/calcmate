@@ -1,0 +1,31 @@
+name: Reminder (이메일 알림용 이슈 생성)
+# GitHub 이 이슈 생성 알림을 계정 이메일로 보내는 것을 이용한 예약 알림.
+# 시간은 UTC. 00:00 UTC = 09:00 KST.
+on:
+  schedule:
+    - cron: '0 0 16 9 *'   # 9월 16일: 애드센스 신청 (색인 2주 경과)
+    - cron: '0 0 2 1 *'    # 1월 2일: 4대보험 요율·세율 갱신
+    - cron: '0 0 2 7 *'    # 7월 2일: 국민연금 기준소득월액 상한 갱신
+  workflow_dispatch:
+permissions:
+  issues: write
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create reminder issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          M=$(date -u +%m); D=$(date -u +%d)
+          if [ "$M" = "09" ]; then
+            TITLE="[할 일] 애드센스 신청하기 — calcmate.co.kr 색인 확인 후"
+            BODY=$'2주가 지났습니다. 순서:\n\n1. 구글 서치콘솔 → 페이지 메뉴에서 색인된 페이지 수 확인 (20개 이상이면 OK)\n2. https://adsense.google.com 접속 → 사이트 추가 → calcmate.co.kr\n3. 애드센스가 주는 코드(ca-pub-으로 시작)를 복사\n4. 터미널에서 `cd /mnt/c/Users/dev03/calcmate && claude` 실행 후 "애드센스 코드 ca-pub-xxxx 반영해줘" 라고 요청\n\n쿠팡파트너스 가입도 아직이면 https://partners.coupang.com 에서 가입 후 파트너 ID를 같은 방식으로 전달하세요.'
+          elif [ "$M" = "01" ]; then
+            TITLE="[할 일] 새해 4대보험 요율·세율 갱신"
+            BODY=$'국민연금(매년 +0.5%p), 건강보험, 장기요양, 고용보험 요율과 소득세율을 확인해 src/lib/salary.mjs 의 RATES 를 갱신해야 합니다.\n최저임금도 src/lib/labor.mjs 의 MIN_WAGE 갱신.\n\n터미널에서 `cd /mnt/c/Users/dev03/calcmate && claude` 실행 후 "올해 4대보험 요율이랑 최저임금 갱신해줘" 라고 요청하세요.'
+          else
+            TITLE="[할 일] 7월 국민연금 기준소득월액 상한 갱신"
+            BODY=$'매년 7월 국민연금 기준소득월액 상·하한이 바뀝니다. src/lib/salary.mjs 의 pensionMaxMonthly / pensionMinMonthly 확인.\n\n터미널에서 `cd /mnt/c/Users/dev03/calcmate && claude` 실행 후 "국민연금 상한액 갱신해줘" 라고 요청하세요.'
+          fi
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY"
