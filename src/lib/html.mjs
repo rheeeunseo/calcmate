@@ -4,9 +4,10 @@ import { config } from '../config.mjs';
 export const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const base = config.basePath;
 
-// 광고 슬롯. 애드센스 ID가 설정되면 실제 코드, 아니면 자리표시자(개발 확인용)
+// 광고 슬롯. 애드센스 ID가 설정되면 실제 코드, 아니면 아무것도 출력하지 않음
+// (AD_PLACEHOLDER=1 로 빌드하면 개발 확인용 자리표시자를 표시)
 export function ad(slot = 'inArticle') {
-  if (!config.adsenseClient) return `<div class="ad" data-slot="${slot}">광고 영역 (${slot})</div>`;
+  if (!config.adsenseClient) return process.env.AD_PLACEHOLDER ? `<div class="ad" data-slot="${slot}">광고 영역 (${slot})</div>` : '';
   const slotId = config.adsenseSlots[slot];
   if (!slotId) return '';
   return `<div class="ad live"><ins class="adsbygoogle" style="display:block" data-ad-client="${config.adsenseClient}" data-ad-slot="${slotId}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;

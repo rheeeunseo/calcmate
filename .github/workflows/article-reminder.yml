@@ -1,0 +1,26 @@
+name: Article Reminder (글쓰기 알림 메일)
+# 월·목 09:00 KST 에 이슈를 만들어 GitHub 이메일 알림으로 글쓰기를 상기시킴.
+# 실제 글은 Claude Code 세션에서 "글 하나 써줘" 로 작성.
+on:
+  schedule:
+    - cron: '0 0 * * 1,4'   # UTC 00:00 = KST 09:00, 월·목
+  workflow_dispatch:
+permissions:
+  issues: write
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create reminder issue (and close older ones)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PENDING=$(node -e 'const t=JSON.parse(require("fs").readFileSync("content/topics.json","utf8")).topics;const p=t.filter(x=>x.status==="pending");console.log(p.length+"|"+(p[0]?p[0].title:""))')
+          N=${PENDING%%|*}; NEXT=${PENDING#*|}
+          TITLE="[글쓰기] $(TZ=Asia/Seoul date +%m/%d) 블로그 글 1편 발행할 시간입니다"
+          BODY=$'터미널에서 아래를 실행한 뒤 **"글 하나 써줘"** 라고 요청하세요.\n\n```\ncd /mnt/c/Users/dev03/calcmate && claude\n```\n\n- 남은 대기 주제: '"$N"$'개\n- 다음 주제: '"$NEXT"$'\n\n글이 발행되면 이 이슈는 다음 알림 때 자동으로 닫힙니다. 대기 주제가 5개 이하로 줄면 "주제 20개 더 뽑아줘" 라고 요청하세요.'
+          # 이전 알림 이슈 정리
+          gh issue list --repo "$GITHUB_REPOSITORY" --label "글쓰기-알림" --state open --json number -q '.[].number' | xargs -r -I{} gh issue close --repo "$GITHUB_REPOSITORY" {} -c "다음 알림으로 대체됨"
+          gh label create "글쓰기-알림" --repo "$GITHUB_REPOSITORY" --color 0e8a16 --description "정기 글쓰기 알림" 2>/dev/null || true
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY" --label "글쓰기-알림"
