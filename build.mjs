@@ -74,5 +74,7 @@ await writeFile(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap
 await writeFile(path.join(DIST, '404.html'), render({ path: '/404/', title: '페이지를 찾을 수 없습니다', description: '요청하신 페이지가 존재하지 않습니다.', content: `<h1>페이지를 찾을 수 없습니다</h1><p><a href="${config.basePath}/">홈으로 돌아가기</a></p>` }));
 if (existsSync(path.join(ROOT, 'CNAME'))) await cp(path.join(ROOT, 'CNAME'), path.join(DIST, 'CNAME'));
 await writeFile(path.join(DIST, '.nojekyll'), '');
+// 애드센스 ads.txt (판매자 인증). 클라이언트 ID가 설정된 경우에만 생성
+if (config.adsenseClient) await writeFile(path.join(DIST, 'ads.txt'), `google.com, ${config.adsenseClient.replace(/^ca-/, '')}, DIRECT, f08c47fec0942fa0\n`);
 
 console.log(`✔ ${count} pages → dist/  (${Date.now() - t0}ms)  base="${config.basePath}"  url=${config.siteUrl}`);
