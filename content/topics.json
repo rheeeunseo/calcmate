@@ -169,7 +169,8 @@
       "relatedTools": [
         "leave"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-09-21"
     },
     {
       "slug": "choejeoimgeum-2026-wolgeup-hwansan",
@@ -177,7 +178,8 @@
       "relatedTools": [
         "parttime"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-09-21"
     },
     {
       "slug": "yeonbong-5000-silsuryeong-360man",
