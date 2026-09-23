@@ -219,11 +219,12 @@
     },
     {
       "slug": "sinyong-daechul-vs-madeonegative",
-      "title": "신용대출 vs 마이너스통장, 이자 계산으로 비교하기",
+      "title": "신용대출 vs 마이너스통장, 3,000만원 빌릴 때 이자 차이",
       "relatedTools": [
         "loan"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-09-23"
     },
     {
       "slug": "yegeum-jja-yeokgi-pungcha",
@@ -268,11 +269,12 @@
     },
     {
       "slug": "chwideukse-saengae-choecho-gammyeon-2026",
-      "title": "생애최초 주택 취득세 감면 2026년 조건과 신청 방법",
+      "title": "생애최초 주택 취득세 감면 200만원 - 조건과 신청 방법",
       "relatedTools": [
         "acquisition-tax"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-09-23"
     },
     {
       "slug": "ilsijeok-2jutaek-chwideukse-yangdose",
