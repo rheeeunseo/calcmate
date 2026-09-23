@@ -33,7 +33,7 @@ ${field({ id: 'existing', label: '기존 대출 연간 원리금', unit: '원', 
 ${ad('inArticle')}
 <h2>연소득별 주택담보대출 한도 (금리 4%, 스트레스 1.5%p, DSR 40%)</h2>
 <div class="tbl-wrap"><table class="grid"><thead><tr><th>연소득</th><th>30년 만기</th><th>40년 만기</th></tr></thead><tbody>${rows.map(([i, a, b]) => `<tr><td>${num(i)}만원</td><td>${num(a)}원</td><td>${num(b)}원</td></tr>`).join('')}</tbody></table></div>
-<p>기존 대출이 없을 때 기준입니다. 신용대출 5,000만원(연 원리금 약 1,100만원)이 있으면 한도가 약 1억 6천만원 줄어듭니다. 실제 월 상환액은 <a href="${base}/loan/">대출 이자 계산기</a>에서 확인하세요.</p>
+<p>기존 대출이 없을 때 기준입니다. 신용대출 5,000만원(원금 5년 분할 + 금리 5% 가정, 연 원리금 약 1,250만원)이 있으면 한도가 약 1억 8천만원 줄어듭니다. 실제 월 상환액은 <a href="${base}/loan/">대출 이자 계산기</a>에서 확인하세요.</p>
 <h2>DSR 에 포함되는 대출과 제외되는 대출</h2>
 <div class="tbl-wrap"><table class="grid"><thead><tr><th>포함</th><th>제외</th></tr></thead><tbody><tr><td>주택담보대출, 신용대출(5년 분할 가정), 마이너스통장(한도 기준), 카드론, 자동차 할부, 학자금 외 일반 대출</td><td>전세자금대출(이자만 일부 포함), 300만원 이하 소액, 서민금융상품, 보금자리론 일부, 예적금담보대출</td></tr></tbody></table></div>
 ${affiliate({ title: '내 한도 안에서 최저금리 찾기', desc: '여러 은행의 주담대 금리와 한도를 한 번에 조회.', url: '#', cta: '금리 비교' })}
