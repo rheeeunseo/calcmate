@@ -18,9 +18,13 @@ export const config = {
   // TODO: 쿠팡파트너스 승인 후 파트너 ID/링크 입력. 비어 있으면 제휴 박스 미노출.
   coupangPartnerId: process.env.COUPANG_PARTNER_ID || '',
 
+  // 구글 애널리틱스 4 측정 ID (G-XXXXXXXXXX). repo variable GA_ID 로 주입. 비어 있으면 스크립트 미삽입.
+  gaId: process.env.GA_ID || '',
+
   // 검색엔진 소유 확인용 메타 태그 값 (구글은 DNS TXT 로 확인 완료)
-  googleSiteVerification: '',
+  googleSiteVerification: process.env.GOOGLE_VERIFICATION || '',
   naverSiteVerification: 'b5d5d2ca6ac828678205a29b6da03d4182829e66',
+  bingSiteVerification: process.env.BING_VERIFICATION || '',
 
   // 자동 콘텐츠 생성 (scripts/generate-article.mjs)
   articleModel: process.env.ARTICLE_MODEL || 'claude-sonnet-5',

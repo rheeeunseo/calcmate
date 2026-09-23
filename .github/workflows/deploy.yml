@@ -23,6 +23,9 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL }}
           BASE_PATH: ${{ vars.BASE_PATH }}
           ADSENSE_CLIENT: ${{ vars.ADSENSE_CLIENT }}
+          GA_ID: ${{ vars.GA_ID }}
+          GOOGLE_VERIFICATION: ${{ vars.GOOGLE_VERIFICATION }}
+          BING_VERIFICATION: ${{ vars.BING_VERIFICATION }}
           COUPANG_PARTNER_ID: ${{ vars.COUPANG_PARTNER_ID }}
         run: node build.mjs
       - uses: actions/upload-pages-artifact@v3

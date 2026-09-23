@@ -21,7 +21,11 @@ function render(page) {
   const verification = [
     config.googleSiteVerification && `<meta name="google-site-verification" content="${config.googleSiteVerification}">`,
     config.naverSiteVerification && `<meta name="naver-site-verification" content="${config.naverSiteVerification}">`,
+    config.bingSiteVerification && `<meta name="msvalidate.01" content="${config.bingSiteVerification}">`,
   ].filter(Boolean).join('\n');
+  const analytics = config.gaId
+    ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${config.gaId}"></script>\n<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${config.gaId}');</script>`
+    : '';
   const adsenseHead = config.adsenseClient
     ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.adsenseClient}" crossorigin="anonymous"></script>`
     : '';
@@ -30,7 +34,7 @@ function render(page) {
     title: page.title.includes(config.siteName) ? page.title : `${page.title} | ${config.siteName}`,
     description: page.description, canonical, siteName: config.siteName, tagline: config.tagline,
     base: config.basePath, year: new Date().getFullYear(), content: page.content,
-    jsonld, verification, adsenseHead, scripts,
+    jsonld, verification, adsenseHead, analytics, scripts,
   };
   return layout.replace(/\{\{(\w+)\}\}/g, (_, k) => (k in vars ? String(vars[k]) : ''));
 }
