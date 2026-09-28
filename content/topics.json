@@ -201,11 +201,12 @@
     },
     {
       "slug": "sangyeogeum-segeum-eolmana",
-      "title": "상여금·성과급 세금은 얼마나 뗄까 - 실수령액 계산",
+      "title": "성과급 1,000만원 실수령액은 762만원 - 상여금 세금 계산",
       "relatedTools": [
         "salary"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-09-28"
     },
     {
       "slug": "jutaek-dambo-daechul-dsr-gyesan",
@@ -237,11 +238,12 @@
     },
     {
       "slug": "parking-tongjang-vs-yegeum",
-      "title": "파킹통장 vs 정기예금, 1000만원 6개월 기준 이자 비교",
+      "title": "파킹통장 vs 정기예금, 1,000만원 6개월 이자 차이는 2만원",
       "relatedTools": [
         "deposit"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-09-28"
     },
     {
       "slug": "toejikgeum-jigeup-gihan-mijigeup",
