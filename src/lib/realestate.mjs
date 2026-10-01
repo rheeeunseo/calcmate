@@ -9,7 +9,7 @@
  * @param {number} [p.houseCount] 취득 후 보유 주택 수 (1 = 1주택자)
  * @param {boolean} [p.regulated] 조정대상지역 여부
  * @param {boolean} [p.large]     전용 85㎡ 초과 (농특세 대상)
- * @param {boolean} [p.firstHome] 생애최초 주택 (취득세 200만원 한도 감면, 12억 이하)
+ * @param {boolean|'300'} [p.firstHome] 생애최초 주택 (12억 이하, 취득세 200만원 한도 감면. '300' = 인구감소지역·소형주택 300만원 한도, 2028.12.31 까지)
  */
 export function calcAcquisitionTax({ price, type = 'house', houseCount = 1, regulated = false, large = false, firstHome = false }) {
   let rate, eduRate, ruralRate, label;
@@ -28,7 +28,7 @@ export function calcAcquisitionTax({ price, type = 'house', houseCount = 1, regu
   }
   let acquisition = Math.floor(price * rate);
   let reduction = 0;
-  if (firstHome && type === 'house' && houseCount === 1 && price <= 1_200_000_000) { reduction = Math.min(acquisition, 2_000_000); }
+  if (firstHome && type === 'house' && houseCount === 1 && price <= 1_200_000_000) { reduction = Math.min(acquisition, firstHome === '300' ? 3_000_000 : 2_000_000); }
   const education = Math.floor(price * eduRate);
   const rural = Math.floor(price * ruralRate);
   const total = acquisition - reduction + education + rural;
@@ -56,7 +56,7 @@ export function calcBrokerage({ deal, type = 'house', price, deposit, monthly = 
   let rate, cap = null, note = '';
   if (type === 'house') {
     const table = deal === 'sale' ? SALE_HOUSE : RENT_HOUSE;
-    for (const [limit, r, c] of table) if (amount <= limit) { rate = r; cap = c; break; }
+    for (const [limit, r, c] of table) if (amount < limit) { rate = r; cap = c; break; } // 구간은 '이상~미만'
     note = '주택 법정 상한요율';
   } else if (type === 'officetel') {
     rate = deal === 'sale' ? 0.005 : 0.004; note = '주거용 오피스텔 (전용 85㎡ 이하, 부엌·화장실 구비) 상한요율';
@@ -131,9 +131,10 @@ const progressive = (b) => { for (const [l, r, s] of BRACKETS) if (b <= l) retur
  * @param {number} p.holdYears     보유기간 (년)
  * @param {number} [p.liveYears]   거주기간 (년, 1세대1주택 장특공제용)
  * @param {boolean} [p.oneHouse]   1세대 1주택 (2년 이상 보유, 조정지역은 2년 거주 요건 충족 가정)
- * @param {number} [p.houseCount]  보유 주택 수 (다주택 중과는 2026.5.9 까지 유예 가정 → 기본세율 적용)
+ * @param {0|20|30} [p.surcharge]  조정대상지역 다주택 중과 (%p, 2주택 20 / 3주택 이상 30). 유예가 2026.5.9 종료되어 5.10 양도분부터 적용, 장특공제 배제
  */
-export function calcCapitalGainsTax({ salePrice, buyPrice, expenses = 0, holdYears, liveYears = 0, oneHouse = false }) {
+export function calcCapitalGainsTax({ salePrice, buyPrice, expenses = 0, holdYears, liveYears = 0, oneHouse = false, surcharge = 0 }) {
+  if (oneHouse) surcharge = 0;
   const gain = Math.max(salePrice - buyPrice - expenses, 0);
   let taxableGain = gain, exemptGain = 0, note = '';
   if (oneHouse && holdYears >= 2) {
@@ -145,7 +146,7 @@ export function calcCapitalGainsTax({ salePrice, buyPrice, expenses = 0, holdYea
   if (oneHouse && holdYears >= 3) {
     const h = Math.min(Math.floor(holdYears), 10) * 0.04, l = Math.min(Math.floor(liveYears), 10) * 0.04;
     ltRate = liveYears >= 2 ? h + l : Math.min(Math.floor(holdYears), 15) * 0.02; // 2년 미거주 시 일반공제
-  } else if (holdYears >= 3) ltRate = Math.min(Math.floor(holdYears), 15) * 0.02;
+  } else if (holdYears >= 3 && !surcharge) ltRate = Math.min(Math.floor(holdYears), 15) * 0.02;
   const ltDeduction = Math.floor(taxableGain * ltRate);
   const basic = taxableGain > 0 ? Math.min(2_500_000, taxableGain - ltDeduction) : 0;
   const taxBase = Math.max(taxableGain - ltDeduction - basic, 0);
@@ -153,6 +154,10 @@ export function calcCapitalGainsTax({ salePrice, buyPrice, expenses = 0, holdYea
   if (holdYears < 1) { tax = taxBase * 0.7; rateLabel = '1년 미만 70%'; }
   else if (holdYears < 2) { tax = taxBase * 0.6; rateLabel = '2년 미만 60%'; }
   else { tax = progressive(taxBase); rateLabel = '기본세율 6~45%'; }
+  if (surcharge) { // 중과세율과 단기 보유 세율 중 큰 쪽
+    const heavy = progressive(taxBase) + taxBase * surcharge / 100;
+    if (heavy > tax) { tax = heavy; rateLabel = `기본세율 + ${surcharge}%p 중과`; }
+  }
   tax = Math.floor(tax);
   const local = Math.floor(tax * 0.1);
   return { gain, exemptGain, taxableGain, ltRate, ltDeduction, basic, taxBase, tax, local, total: tax + local, rateLabel, note, netProceeds: salePrice - buyPrice - expenses - tax - local };

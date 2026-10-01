@@ -11,7 +11,7 @@ function calcForm(price = 500_000_000) {
 ${field({ id: 'price', label: '취득가액 (매매가)', unit: '원', value: num(price), chips: [{ l: '3억', v: 3e8 }, { l: '5억', v: 5e8 }, { l: '7억', v: 7e8 }, { l: '10억', v: 1e9 }, { l: '15억', v: 1.5e9 }] })}
 <div class="row">${select({ id: 'type', label: '부동산 종류', value: 'house', options: [{ v: 'house', l: '주택 (아파트·빌라)' }, { v: 'officetel', l: '오피스텔·상가' }, { v: 'land', l: '토지' }] })}${select({ id: 'houseCount', label: '취득 후 주택 수', value: '1', options: [{ v: 1, l: '1주택' }, { v: 2, l: '2주택' }, { v: 3, l: '3주택' }, { v: 4, l: '4주택 이상' }] })}</div>
 <div class="row">${select({ id: 'regulated', label: '조정대상지역', value: 'no', options: [{ v: 'no', l: '비조정지역' }, { v: 'yes', l: '조정대상지역' }] })}${select({ id: 'large', label: '전용면적', value: 'no', options: [{ v: 'no', l: '85㎡ 이하' }, { v: 'yes', l: '85㎡ 초과' }] })}</div>
-${select({ id: 'firstHome', label: '생애최초 주택 구입', value: 'no', options: [{ v: 'no', l: '아니오' }, { v: 'yes', l: '예 (취득세 최대 200만원 감면)' }] })}
+${select({ id: 'firstHome', label: '생애최초 주택 구입', value: 'no', options: [{ v: 'no', l: '아니오' }, { v: 'yes', l: '예 (취득세 최대 200만원 감면)' }, { v: '300', l: '예 - 인구감소지역·소형주택 (최대 300만원 감면)' }] })}
 </div><div class="result"><div class="sub">납부할 취득세 합계</div><div class="big" id="r-total">-</div><div class="sub" id="r-label"></div>
 <table class="kv"><tbody><tr><td>취득세</td><td id="r-acq"></td></tr><tr><td class="indent">생애최초 감면</td><td id="r-red"></td></tr><tr><td>지방교육세</td><td id="r-edu"></td></tr><tr><td>농어촌특별세</td><td id="r-rural"></td></tr><tr class="total"><td>합계 (실효세율 <span id="r-eff"></span>)</td><td id="r-total2"></td></tr></tbody></table>
 <div class="notice">취득일로부터 60일 이내 신고·납부. 주택 수는 세대 합산 기준.</div></div></div></div>`;
@@ -24,7 +24,7 @@ function priceTable(hl) {
 const faq = [
   { q: '취득세율은 어떻게 정해지나요?', a: '1주택(또는 비조정지역 2주택)은 6억 이하 1%, 6억 초과 9억 이하 1~3% 구간별 선형 세율(취득가액 × 2/3억 − 3), 9억 초과 3%입니다. 여기에 지방교육세(취득세율의 10%)와 85㎡ 초과 시 농어촌특별세 0.2%가 붙습니다.' },
   { q: '다주택자 취득세 중과는?', a: '조정대상지역 2주택 또는 비조정지역 3주택은 8%, 조정대상지역 3주택 이상 또는 비조정지역 4주택 이상은 12%입니다. 지방교육세 0.4%, 85㎡ 초과 시 농특세 0.6~1%가 추가되어 실효세율은 8.4~13.4%입니다. 일시적 2주택은 종전 주택을 3년 내 처분하면 1주택 세율을 적용합니다.' },
-  { q: '생애최초 주택 취득세 감면 조건은?', a: '본인과 배우자 모두 주택을 소유한 적이 없고, 취득가액 12억원 이하 주택을 취득하면 취득세 200만원 한도로 감면됩니다. 소득 요건은 2023년부터 폐지되었습니다. 3개월 내 전입하고 3년간 거주해야 추징되지 않습니다.' },
+  { q: '생애최초 주택 취득세 감면 조건은?', a: '본인과 배우자 모두 주택을 소유한 적이 없고, 취득가액 12억원 이하 주택을 취득하면 취득세 200만원 한도로 감면됩니다(인구감소지역 주택과 일정 소형주택은 300만원, 2028년 말까지). 소득 요건은 2023년부터 폐지되었습니다. 취득 후 3년 안에 팔거나 증여하거나 임대 등 다른 용도로 쓰면 추징됩니다.' },
   { q: '취득세는 언제까지 내나요?', a: '잔금일(취득일)로부터 60일 이내에 물건지 시·군·구청에 신고·납부해야 하며, 기한을 넘기면 20% 무신고가산세와 납부지연가산세가 부과됩니다. 등기 시 취득세 납부 영수증이 필요하므로 보통 잔금일에 법무사가 함께 처리합니다.' },
 ];
 

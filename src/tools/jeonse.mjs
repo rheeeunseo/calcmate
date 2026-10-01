@@ -3,7 +3,7 @@ import { num, wonKo } from '../lib/format.mjs';
 import { ad, faqHtml, faqJsonld, webAppJsonld, breadcrumb, relatedTools, field, select, base } from '../lib/html.mjs';
 
 const slug = 'jeonse', name = '전월세 전환 계산기';
-const BASE_RATE = 2.5; // 한국은행 기준금리 (확인 필요)
+const BASE_RATE = 3.0; // 한국은행 기준금리 (2026.8.27 인상, 금통위 때마다 확인)
 const LEGAL = BASE_RATE + 2;
 const faq = [
   { q: '전월세 전환율 법정 상한은?', a: `주택임대차보호법상 전환율 상한은 "기준금리 + 2%p"와 "10%" 중 낮은 값입니다. 기준금리 ${BASE_RATE}% 기준 ${LEGAL}%입니다. 다만 이 상한은 계약 기간 중 전세를 월세로 바꿀 때 적용되며, 신규 계약에는 강제되지 않습니다.` },
