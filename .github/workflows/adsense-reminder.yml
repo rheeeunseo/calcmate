@@ -1,0 +1,28 @@
+name: AdSense Review Reminder (애드센스 재검토 알림 메일)
+# 2026-10-26 09:00 KST 에 이슈를 만들고 저장소 소유자를 @멘션·담당자로 지정해 GitHub 메일 알림을 보낸다.
+on:
+  schedule:
+    - cron: '0 0 26 10 *'   # UTC 00:00 = KST 09:00, 10월 26일
+  workflow_dispatch:
+    inputs:
+      test:
+        description: '테스트 발송 (제목에 [테스트] 표시)'
+        type: boolean
+        default: true
+permissions:
+  issues: write
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create reminder issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+          TEST: ${{ inputs.test }}
+        run: |
+          PREFIX=""; [ "$TEST" = "true" ] && PREFIX="[테스트] "
+          TITLE="${PREFIX}[애드센스] 재검토 요청할 때가 됐습니다"
+          BODY="@${OWNER} 애드센스 재검토를 요청할 때입니다."$'\n\n1. 터미널에서 `cd /mnt/c/Users/dev03/calcmate && claude` 실행\n2. **"애드센스 재검토 전에 사이트 점검해줘"** 라고 요청\n3. 점검이 끝나면 애드센스 > 사이트 > calcmate.co.kr 에서 "문제를 수정했음을 확인합니다" 체크 후 **검토 요청**\n\n점검 전에는 누르지 마세요.'
+          gh label create "애드센스-알림" --repo "$GITHUB_REPOSITORY" --color d93f0b --description "애드센스 재검토 알림" 2>/dev/null || true
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY" --label "애드센스-알림" --assignee "$OWNER"
