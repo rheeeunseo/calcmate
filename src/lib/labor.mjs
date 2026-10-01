@@ -26,7 +26,7 @@ export function calcParttime({ hourly, hoursPerDay, daysPerWeek, nightHoursPerWe
   const monthlyBase = Math.round(weeklyHours * WEEKS_PER_MONTH) * hourly;
   const monthlyGross = monthlyHours * hourly + monthlyNight;
   const monthlyHoliday = monthlyGross - monthlyBase - monthlyNight;
-  const rate = tax === 'freelancer' ? 0.033 : tax === 'insurance' ? 0.0944 : 0; // 4대보험 근사: 4.75+3.595+0.466+0.9 ≈ 9.7%, 소액 소득세 감안 없이 9.44% 로 단순화
+  const rate = tax === 'freelancer' ? 0.033 : tax === 'insurance' ? 0.0972 : 0; // 4대보험 근사: 4.75+3.595+0.472+0.9 ≈ 9.72% (2026년 요율, 소득세 제외)
   const deduction = Math.round(monthlyGross * rate);
   return {
     weeklyHours, holidayEligible, holidayHours, monthlyHours,

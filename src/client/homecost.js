@@ -1,10 +1,10 @@
 import { calcHomeCost } from '../lib/realestate.mjs';
 import { num, wonKo } from '../lib/format.mjs';
 import { $, val, setText, bind } from './_common.js';
-const IDS = ['price', 'income', 'cash', 'rate', 'years', 'ltv', 'large', 'firstHome', 'existing'];
+const IDS = ['price', 'income', 'cash', 'region', 'rate', 'years', 'ltv', 'large', 'firstHome', 'existing'];
 function run() {
   const price = val('price'), income = val('income'); if (!price || !income) return;
-  const c = calcHomeCost({ price, income, cash: val('cash'), rate: val('rate'), years: val('years') || 30, ltv: val('ltv') || 70, existingAnnual: val('existing'), large: $('large').value === 'yes', firstHome: $('firstHome').value === 'yes' });
+  const c = calcHomeCost({ price, income, cash: val('cash'), rate: val('rate'), years: val('years') || 30, ltv: val('ltv') || 70, region: $('region').value, existingAnnual: val('existing'), large: $('large').value === 'yes', firstHome: $('firstHome').value === 'yes' });
   setText('r-cash', wonKo(c.cashNeeded));
   setText('r-summary', `대출 ${wonKo(c.loan)} + 현금 ${wonKo(c.cashNeeded)} · 월 ${num(c.pmt)}원 상환`);
   setText('r-price', num(c.price) + '원'); setText('r-binding', c.dsr.binding); setText('r-loan', num(c.loan) + '원');

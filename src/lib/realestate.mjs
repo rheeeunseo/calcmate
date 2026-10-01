@@ -83,27 +83,41 @@ export function convertMonthly({ deposit, monthly, rate }) {
 }
 
 // ---- DSR 대출한도 ----
+// 지역별 주담대 규제 (2026.10 기준). 수도권·규제지역: 스트레스 금리 3.0%p(2025.10.16~), 만기 최장 30년(2025.6.28~),
+// 주택가격별 대출 상한 6억/4억/2억(15억 이하/25억 이하/초과). 지방: 스트레스 2단계 0.75%p 유지(2026.12.31 까지).
+// 스트레스 금리는 변동금리 기준이며 혼합형·주기형은 더 낮게 적용된다.
+export const DSR_REGIONS = {
+  capital: { label: '수도권·규제지역', stress: 3.0, maxYears: 30 },
+  local: { label: '지방', stress: 0.75, maxYears: 40 },
+};
+export const capitalLoanCap = (price) => (price > 2_500_000_000 ? 200_000_000 : price > 1_500_000_000 ? 400_000_000 : 600_000_000);
 /**
  * @param {object} p
  * @param {number} p.income        연소득 (세전)
  * @param {number} p.rate          신규 주담대 금리 (%)
- * @param {number} p.years         만기 (년)
- * @param {number} [p.stress]      스트레스 가산금리 (%p, 2025.7~ 3단계 1.5, 수도권 기준)
+ * @param {number} p.years         만기 (년, 수도권·규제지역은 30년 초과 시 30년으로 계산)
+ * @param {'capital'|'local'} [p.region] 지역 (기본 수도권·규제지역)
+ * @param {number} [p.stress]      스트레스 가산금리 (%p, 생략하면 지역 기본값)
  * @param {number} [p.existingAnnual] 기존 대출 연간 원리금 상환액
  * @param {number} [p.dsrLimit]    DSR 한도 (은행 40, 2금융 50)
- * @param {number} [p.price]       주택가격 (LTV 계산용, 선택)
- * @param {number} [p.ltv]         LTV 한도 % (선택, 기본 70)
+ * @param {number} [p.price]       주택가격 (LTV·대출 상한 계산용, 선택)
+ * @param {number} [p.ltv]         LTV 한도 % (선택, 기본 70. 규제지역은 40)
  */
-export function calcDsrLimit({ income, rate, years, stress = 1.5, existingAnnual = 0, dsrLimit = 40, price = 0, ltv = 70 }) {
+export function calcDsrLimit({ income, rate, years, region = 'capital', stress, existingAnnual = 0, dsrLimit = 40, price = 0, ltv = 70 }) {
+  const reg = DSR_REGIONS[region] || DSR_REGIONS.capital;
+  if (stress === undefined || Number.isNaN(stress)) stress = reg.stress;
+  const appliedYears = Math.min(years, reg.maxYears);
   const allowedAnnual = income * dsrLimit / 100 - existingAnnual;
-  const n = years * 12, r = (rate + stress) / 100 / 12;
+  const n = appliedYears * 12, r = (rate + stress) / 100 / 12;
   const pmtPerWon = r === 0 ? 1 / n : r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1); // 원리금균등 월 상환액 / 원금
   const maxByDsr = allowedAnnual > 0 ? allowedAnnual / 12 / pmtPerWon : 0;
   const maxByLtv = price > 0 ? price * ltv / 100 : Infinity;
-  const limit = Math.max(0, Math.min(maxByDsr, maxByLtv));
+  const maxByCap = region === 'capital' ? capitalLoanCap(price) : Infinity;
+  const limit = Math.max(0, Math.min(maxByDsr, maxByLtv, maxByCap));
   const rActual = rate / 100 / 12;
   const pmtActual = rActual === 0 ? limit / n : limit * rActual * Math.pow(1 + rActual, n) / (Math.pow(1 + rActual, n) - 1);
-  return { allowedAnnual, maxByDsr, maxByLtv, limit, monthlyPayment: pmtActual, stressRate: rate + stress, binding: maxByLtv < maxByDsr ? 'LTV' : 'DSR' };
+  const binding = limit === maxByDsr ? 'DSR' : limit === maxByLtv ? 'LTV' : '대출 상한';
+  return { allowedAnnual, maxByDsr, maxByLtv, maxByCap, limit, monthlyPayment: pmtActual, stressRate: rate + stress, appliedYears, binding };
 }
 
 // ---- 양도소득세 (주택, 개인) ----
@@ -154,13 +168,14 @@ import { monthlyPayment } from './loan.mjs';
  * @param {number} [p.rate]     대출 금리 %
  * @param {number} [p.years]    만기
  * @param {number} [p.ltv]      LTV %
- * @param {number} [p.stress]   스트레스 가산 %p
+ * @param {'capital'|'local'} [p.region] 지역 (기본 수도권·규제지역)
+ * @param {number} [p.stress]   스트레스 가산 %p (생략하면 지역 기본값)
  * @param {number} [p.existingAnnual] 기존 대출 연 원리금
  * @param {boolean} [p.large]   85㎡ 초과
  * @param {boolean} [p.firstHome] 생애최초
  * @param {number} [p.loanWanted] 희망 대출액 (0 = 최대)
  */
-export function calcHomeCost({ price, income, cash = 0, rate = 4, years = 30, ltv = 70, stress = 1.5, existingAnnual = 0, large = false, firstHome = false, loanWanted = 0 }) {
+export function calcHomeCost({ price, income, cash = 0, rate = 4, years = 30, ltv = 70, region = 'capital', stress, existingAnnual = 0, large = false, firstHome = false, loanWanted = 0 }) {
   const acq = calcAcquisitionTax({ price, large, firstHome });
   const brk = calcBrokerage({ deal: 'sale', price });
   const legal = 400_000;                                   // 법무사 등기 대행 (셀프등기 시 0)
@@ -168,7 +183,8 @@ export function calcHomeCost({ price, income, cash = 0, rate = 4, years = 30, lt
   const bond = Math.round(price * 0.7 * 0.021 * 0.1 / 1000) * 1000; // 국민주택채권: 시가표준(≈70%) × 매입률(≈2.1%) × 할인율(≈10%) 근사
   const otherCosts = legal + stamp + bond;
   const purchaseCosts = acq.total + brk.total + otherCosts;
-  const dsr = calcDsrLimit({ income, rate, years, stress, existingAnnual, price, ltv });
+  const dsr = calcDsrLimit({ income, rate, years, region, stress, existingAnnual, price, ltv });
+  years = dsr.appliedYears;
   const loan = loanWanted > 0 ? Math.min(loanWanted, dsr.limit) : dsr.limit;
   const pmt = loan > 0 ? monthlyPayment(loan, rate, years * 12) : 0;
   const totalInterest = pmt * years * 12 - loan;
