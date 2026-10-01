@@ -14,6 +14,18 @@ const DIST = path.join(ROOT, 'dist');
 const layout = await readFile(path.join(ROOT, 'src/layout.html'), 'utf8');
 const urls = [];
 
+// 검색에 노출할 금액별 하위 페이지. 여기에 없는 하위 페이지는 그대로 만들되 noindex 처리하고 사이트맵에서 뺀다
+// (금액만 다른 유사 페이지가 대량으로 색인되지 않도록).
+const INDEXED_SUBPAGES = {
+  salary: [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000, 9500, 10000, 12000, 15000, 20000],
+  loan: [5000, 10000, 20000, 30000, 50000],
+  'acquisition-tax': [30000, 50000, 70000, 100000, 150000],
+  brokerage: [30000, 50000, 100000],
+  'home-cost': [30000, 50000, 70000, 100000, 150000],
+  parttime: [10320, 12000, 15000],
+};
+const isIndexedSub = (slug, subPath) => (INDEXED_SUBPAGES[slug] || []).includes(Number(subPath.split('/').filter(Boolean).pop()));
+
 function render(page) {
   const canonical = config.siteUrl + config.basePath + page.path;
   const jsonld = [].concat(page.jsonld || []).filter(Boolean)
@@ -35,6 +47,8 @@ function render(page) {
     description: page.description, canonical, siteName: config.siteName, tagline: config.tagline,
     base: config.basePath, year: new Date().getFullYear(), content: page.content,
     jsonld, verification, adsenseHead, analytics, scripts,
+    affiliateNotice: config.coupangPartnerId ? '    <p class="muted">이 사이트는 쿠팡파트너스 활동의 일환으로 일정액의 수수료를 제공받을 수 있습니다.</p>\n' : '',
+    robots: page.noindex ? '<meta name="robots" content="noindex, follow">' : '',
   };
   return layout.replace(/\{\{(\w+)\}\}/g, (_, k) => (k in vars ? String(vars[k]) : ''));
 }
@@ -44,7 +58,7 @@ async function emit(page) {
   const outDir = path.join(DIST, page.path);
   await mkdir(outDir, { recursive: true });
   await writeFile(path.join(outDir, 'index.html'), html);
-  urls.push({ loc: config.siteUrl + config.basePath + page.path, priority: page.priority ?? 0.6, lastmod: page.lastmod });
+  if (!page.noindex) urls.push({ loc: config.siteUrl + config.basePath + page.path, priority: page.priority ?? 0.6, lastmod: page.lastmod });
 }
 
 // ---- build ----
@@ -66,7 +80,7 @@ let count = 0;
 for (const p of pages) { await emit(await p(ctx)); count++; }
 for (const tool of tools) {
   await emit({ ...(await tool.page(ctx)), path: `/${tool.slug}/`, priority: 0.9 }); count++;
-  if (tool.pages) for (const sub of await tool.pages(ctx)) { await emit({ ...sub, priority: 0.7 }); count++; }
+  if (tool.pages) for (const sub of await tool.pages(ctx)) { await emit({ ...sub, priority: 0.7, noindex: !isIndexedSub(tool.slug, sub.path) }); count++; }
 }
 await emit(renderBlogIndex(ctx)); count++;
 for (const a of articles) { await emit(renderArticlePage(ctx, a)); count++; }
