@@ -229,12 +229,13 @@
     },
     {
       "slug": "yegeum-jja-yeokgi-pungcha",
-      "title": "예적금 풍차돌리기 방법과 실제 이자 계산",
+      "title": "예적금 풍차돌리기 방법과 실제 이자 계산 - 1,200만원이면 세후 28만원",
       "relatedTools": [
         "savings",
         "deposit"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-10-01"
     },
     {
       "slug": "parking-tongjang-vs-yegeum",
@@ -247,11 +248,12 @@
     },
     {
       "slug": "toejikgeum-jigeup-gihan-mijigeup",
-      "title": "퇴직금 지급 기한 14일과 미지급 시 신고 방법",
+      "title": "퇴직금 지급 기한 14일과 미지급 시 신고 방법 - 지연이자 연 20%",
       "relatedTools": [
         "severance"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-10-01"
     },
     {
       "slug": "bugase-hwangeup-jogeon-sigi",
