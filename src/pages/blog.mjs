@@ -28,10 +28,10 @@ export function renderArticlePage({ config, tools, articles }, a) {
   const related = (a.relatedTools || []).map((s) => tools.find((t) => t.slug === s)).filter(Boolean);
   const others = articles.filter((x) => x.slug !== a.slug).slice(0, 4);
   return {
-    path: `/blog/${a.slug}/`, priority: 0.6, lastmod: a.date,
+    path: `/blog/${a.slug}/`, priority: 0.6, lastmod: a.updated || a.date,
     title: a.title, description: a.description,
     jsonld: { '@context': 'https://schema.org', '@type': 'Article', headline: a.title, description: a.description, datePublished: a.date, dateModified: a.updated || a.date, author: { '@type': 'Organization', name: config.siteName }, publisher: { '@type': 'Organization', name: config.siteName }, mainEntityOfPage: config.siteUrl + base + `/blog/${a.slug}/`, inLanguage: 'ko' },
-    content: `${breadcrumb([{ name: '홈', href: '/' }, { name: '금융 가이드', href: '/blog/' }, { name: a.title }])}<article class="article"><h1>${esc(a.title)}</h1><p class="muted">${a.date}</p>${ad('top')}${a.html}${ad('bottom')}
+    content: `${breadcrumb([{ name: '홈', href: '/' }, { name: '금융 가이드', href: '/blog/' }, { name: a.title }])}<article class="article"><h1>${esc(a.title)}</h1><p class="muted">${a.date}${a.updated && a.updated !== a.date ? ` · 최종 수정 ${a.updated}` : ''}</p>${ad('top')}${a.html}${ad('bottom')}
 ${related.length ? `<div class="card"><strong>관련 계산기</strong><div class="pill-list" style="margin-top:8px">${related.map((t) => `<a href="${base}/${t.slug}/">${esc(t.name)}</a>`).join('')}</div></div>` : ''}
 ${others.length ? `<h2>다른 글</h2><div class="post-list">${others.map((x) => `<a href="${base}/blog/${x.slug}/"><div class="t">${esc(x.title)}</div><div class="d">${esc(x.description)}</div></a>`).join('')}</div>` : ''}</article>`,
   };
