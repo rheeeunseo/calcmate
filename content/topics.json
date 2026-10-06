@@ -315,11 +315,13 @@
     },
     {
       "slug": "wolse-junggae-susuryo-gyesan",
-      "title": "월세 중개수수료 계산법 - 보증금 환산 공식",
+      "title": "월세 중개수수료 계산법 - 보증금 환산 공식과 금액별 복비표",
       "relatedTools": [
-        "brokerage"
+        "brokerage",
+        "jeonse"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-10-06"
     },
     {
       "slug": "jeonse-vs-wolse-2026-bigyo",
