@@ -257,11 +257,12 @@
     },
     {
       "slug": "bugase-hwangeup-jogeon-sigi",
-      "title": "부가세 환급 조건과 시기 - 매입이 매출보다 많을 때",
+      "title": "부가세 환급 조건과 시기 - 일반환급 30일, 조기환급 15일",
       "relatedTools": [
         "vat"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-10-08"
     },
     {
       "slug": "isa-gyejwa-2026-hyetaek",
