@@ -266,11 +266,12 @@
     },
     {
       "slug": "isa-gyejwa-2026-hyetaek",
-      "title": "ISA 계좌 2026년 혜택과 복리 효과 계산",
+      "title": "ISA 계좌 혜택과 절세 효과 계산 - 월 100만원 5년이면 세금 64만원 절약",
       "relatedTools": [
         "compound"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-10-12"
     },
     {
       "slug": "chwideukse-saengae-choecho-gammyeon-2026",
