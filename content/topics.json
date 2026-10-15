@@ -284,12 +284,13 @@
     },
     {
       "slug": "12eok-apateu-chwideukse-budaebiyong",
-      "title": "12억 아파트 살 때 취득세와 부대비용 총액",
+      "title": "12억 아파트 살 때 취득세와 부대비용 총액 - 5,200만원, 항목별 계산",
       "relatedTools": [
         "acquisition-tax",
         "home-cost"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-10-15"
     },
     {
       "slug": "ilsijeok-2jutaek-chwideukse-yangdose",
