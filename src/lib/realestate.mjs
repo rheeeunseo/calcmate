@@ -163,6 +163,24 @@ export function calcCapitalGainsTax({ salePrice, buyPrice, expenses = 0, holdYea
   return { gain, exemptGain, taxableGain, ltRate, ltDeduction, basic, taxBase, tax, local, total: tax + local, rateLabel, note, netProceeds: salePrice - buyPrice - expenses - tax - local };
 }
 
+// ---- 국민주택채권 (주택 소유권 이전 등기) ----
+// 매입률: 주택도시기금법 시행령 별표, 시가표준액(공시가격) 구간 '이상~미만'. [상한, 서울·광역시, 그 밖의 지역]
+const BOND_HOUSE = [[20e6, 0, 0], [50e6, 0.013, 0.013], [100e6, 0.019, 0.014], [160e6, 0.021, 0.016], [260e6, 0.023, 0.018], [600e6, 0.026, 0.021], [Infinity, 0.031, 0.026]];
+export const BOND_DISCOUNT = 0.155;   // 즉시매도 할인율. 매일 바뀜 (2026.1 약 12.5% → 2026.10 중순 15.4~16.0%). 분기마다 확인
+export const OFFICIAL_RATIO = 0.67;  // 공동주택 공시가격 / 시세 (시가표준액을 모를 때의 근사)
+/**
+ * @param {object} p
+ * @param {number} p.officialPrice  시가표준액 (공동주택가격)
+ * @param {boolean} [p.metro]       서울특별시·광역시 소재 (기본 true)
+ * @param {number} [p.discount]     즉시매도 할인율
+ */
+export function calcHousingBond({ officialPrice, metro = true, discount = BOND_DISCOUNT }) {
+  let rate = 0;
+  for (const [limit, m, o] of BOND_HOUSE) if (officialPrice < limit) { rate = metro ? m : o; break; }
+  const purchase = Math.floor(officialPrice * rate / 10000) * 10000; // 만원 미만 절사
+  return { officialPrice, rate, purchase, discount, cost: Math.round(purchase * discount / 1000) * 1000 };
+}
+
 // ---- 내 집 마련 총비용 (통합) ----
 import { monthlyPayment } from './loan.mjs';
 /**
@@ -178,14 +196,15 @@ import { monthlyPayment } from './loan.mjs';
  * @param {number} [p.existingAnnual] 기존 대출 연 원리금
  * @param {boolean} [p.large]   85㎡ 초과
  * @param {boolean} [p.firstHome] 생애최초
+ * @param {boolean} [p.metro]   서울·광역시 소재 (국민주택채권 매입률용, 기본 true)
  * @param {number} [p.loanWanted] 희망 대출액 (0 = 최대)
  */
-export function calcHomeCost({ price, income, cash = 0, rate = 4, years = 30, ltv = 70, region = 'capital', stress, existingAnnual = 0, large = false, firstHome = false, loanWanted = 0 }) {
+export function calcHomeCost({ price, income, cash = 0, rate = 4, years = 30, ltv = 70, region = 'capital', stress, existingAnnual = 0, large = false, firstHome = false, metro = true, loanWanted = 0 }) {
   const acq = calcAcquisitionTax({ price, large, firstHome });
   const brk = calcBrokerage({ deal: 'sale', price });
   const legal = 400_000;                                   // 법무사 등기 대행 (셀프등기 시 0)
   const stamp = price > 1e9 ? 350_000 : price > 1e8 ? 150_000 : 0; // 인지세
-  const bond = Math.round(price * 0.7 * 0.021 * 0.1 / 1000) * 1000; // 국민주택채권: 시가표준(≈70%) × 매입률(≈2.1%) × 할인율(≈10%) 근사
+  const bond = calcHousingBond({ officialPrice: price * OFFICIAL_RATIO, metro }).cost; // 국민주택채권 즉시매도 할인 비용
   const otherCosts = legal + stamp + bond;
   const purchaseCosts = acq.total + brk.total + otherCosts;
   const dsr = calcDsrLimit({ income, rate, years, region, stress, existingAnnual, price, ltv });

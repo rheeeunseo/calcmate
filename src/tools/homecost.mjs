@@ -13,7 +13,7 @@ ${field({ id: 'price', label: '매매가', unit: '원', value: num(price), chips
 ${field({ id: 'income', label: '연소득 (세전, 부부합산 가능)', unit: '원', value: num(income), chips: [4000, 6000, 8000, 10000].map((v) => ({ l: `${num(v)}만`, v: v * 10000 })) })}
 ${field({ id: 'cash', label: '보유 현금 (선택)', unit: '원', value: '0', hint: '입력하면 부족·여유 금액을 알려줍니다' })}
 <div class="row">${field({ id: 'rate', label: '대출 금리', unit: '%', value: '4.0', inputmode: 'decimal' })}${field({ id: 'years', label: '만기', unit: '년', value: '30' })}${field({ id: 'ltv', label: 'LTV', unit: '%', value: '70', hint: '규제지역 40' })}</div>
-${select({ id: 'region', label: '주택 소재지', value: 'capital', options: Object.entries(DSR_REGIONS).map(([v, r]) => ({ v, l: `${r.label} (스트레스 ${r.stress}%p)` })) })}
+<div class="row">${select({ id: 'region', label: '주택 소재지 (대출 규제)', value: 'capital', options: Object.entries(DSR_REGIONS).map(([v, r]) => ({ v, l: `${r.label} (스트레스 ${r.stress}%p)` })) })}${select({ id: 'metro', label: '국민주택채권 매입률', value: 'yes', options: [{ v: 'yes', l: '서울·광역시' }, { v: 'no', l: '그 밖의 지역 (경기 등)' }] })}</div>
 <div class="row">${select({ id: 'large', label: '전용면적', value: 'no', options: [{ v: 'no', l: '85㎡ 이하' }, { v: 'yes', l: '85㎡ 초과' }] })}${select({ id: 'firstHome', label: '생애최초', value: 'no', options: [{ v: 'no', l: '아니오' }, { v: 'yes', l: '예' }] })}</div>
 ${field({ id: 'existing', label: '기존 대출 연간 원리금 (선택)', unit: '원', value: '0' })}
 <p style="margin:8px 0 0"><button type="button" class="btn ghost" id="share">결과 링크 복사</button> <span class="muted" id="share-msg"></span></p>
@@ -34,7 +34,7 @@ ${field({ id: 'existing', label: '기존 대출 연간 원리금 (선택)', unit
 }
 
 const faq = [
-  { q: '집 살 때 매매가 외에 얼마나 더 드나요?', a: '1주택 기준 취득세 1.1~3.5%, 중개수수료 최대 0.4~0.7% + 부가세, 법무사 30~60만원, 인지세 15~35만원, 국민주택채권 할인 비용 수십만 원이 듭니다. 5억 아파트면 약 800만~900만원, 10억이면 약 4,000만원 안팎입니다.' },
+  { q: '집 살 때 매매가 외에 얼마나 더 드나요?', a: `1주택 기준 취득세 1.1~3.5%, 중개수수료 최대 0.4~0.7% + 부가세, 법무사 30~60만원, 인지세 15~35만원, 국민주택채권 할인 비용(공시가격의 1.3~3.1% × 할인율)이 듭니다. 서울 기준 5억 아파트면 약 ${wonKo(Math.round(calcHomeCost({ price: 5e8, income: 6e7 }).purchaseCosts / 1e5) * 1e5)}, 10억이면 약 ${wonKo(Math.round(calcHomeCost({ price: 1e9, income: 6e7 }).purchaseCosts / 1e6) * 1e6)}입니다.` },
   { q: '대출은 얼마까지 나오나요?', a: `스트레스 DSR 40%, LTV, 수도권·규제지역 대출 상한(6억원 등) 중 가장 작은 값입니다. 연소득 6,000만원, 금리 4%, 30년이면 DSR 한도는 수도권 약 ${wonKo(Math.round(calcHomeCost({ price: 2e9, income: 6e7 }).dsr.maxByDsr / 1e6) * 1e6)}, 지방 약 ${wonKo(Math.round(calcHomeCost({ price: 2e9, income: 6e7, region: 'local' }).dsr.maxByDsr / 1e6) * 1e6)}입니다. 규제지역(서울 전역과 경기 일부)은 LTV 가 40%로 낮아집니다.` },
   { q: '월 상환액이 소득의 몇 %면 적당한가요?', a: '일반적으로 월 소득의 30% 이내를 권합니다. 40%를 넘으면 금리 상승이나 소득 변동에 취약해집니다. 이 계산기는 소득 대비 상환 부담률을 함께 표시합니다.' },
   { q: '생애최초면 얼마나 절약되나요?', a: '취득세가 200만원 한도로 감면됩니다(12억 이하). 또한 생애최초 주택구입자는 수도권·규제지역에서도 LTV 70%가 적용되고, 디딤돌·보금자리론 우대금리 등 대출 혜택이 있습니다.' },

@@ -1,4 +1,4 @@
-import { calcAcquisitionTax } from '../lib/realestate.mjs';
+import { calcAcquisitionTax, calcBrokerage, calcHousingBond, calcHomeCost, OFFICIAL_RATIO } from '../lib/realestate.mjs';
 import { num, wonKo } from '../lib/format.mjs';
 import { ad, affiliate, faqHtml, faqJsonld, webAppJsonld, breadcrumb, relatedTools, field, select, base } from '../lib/html.mjs';
 
@@ -43,7 +43,7 @@ function seoBody(hl) {
 ${ad('inArticle')}
 <h2>매매가별 취득세 (${new Date().getFullYear()}년)</h2>${priceTable(hl)}
 <h2>취득세 외에 드는 비용</h2>
-<ul><li><strong>중개수수료</strong>: 5억 매매 기준 최대 200만원 + 부가세. <a href="${base}/brokerage/">중개수수료 계산기</a></li><li><strong>법무사 비용</strong>: 등기 대행 30만~60만원 수준, 셀프등기 시 절약 가능</li><li><strong>국민주택채권 매입</strong>: 시가표준액의 일정 비율로 매입 후 즉시 할인 매도 (실부담 수십만 원)</li><li><strong>인지세</strong>: 1억 초과 10억 이하 15만원, 10억 초과 35만원</li></ul>
+<ul><li><strong>중개수수료</strong>: 5억 매매 기준 최대 200만원 + 부가세. <a href="${base}/brokerage/">중개수수료 계산기</a></li><li><strong>법무사 비용</strong>: 등기 대행 30만~60만원 수준, 셀프등기 시 절약 가능</li><li><strong>국민주택채권 매입</strong>: 공시가격의 1.3~3.1%를 매입 후 즉시 할인 매도. 할인율이 15%대인 2026년 10월 기준 서울 5억 아파트 약 ${wonKo(Math.round(calcHousingBond({ officialPrice: 5e8 * OFFICIAL_RATIO }).cost / 1e4) * 1e4)}, 10억 약 ${wonKo(Math.round(calcHousingBond({ officialPrice: 1e9 * OFFICIAL_RATIO }).cost / 1e4) * 1e4)}</li><li><strong>인지세</strong>: 1억 초과 10억 이하 15만원, 10억 초과 35만원</li></ul>
 ${affiliate({ title: '주택담보대출 금리 비교', desc: '취득세까지 계산했다면 대출 금리도 비교하세요. 0.1%p 차이가 30년간 수백만 원.', url: '#', cta: '금리 비교' })}
 ${faqHtml(faq)}`;
 }
@@ -73,7 +73,7 @@ export const tool = {
 ${ad('top')}
 <h2>조건 바꿔서 계산하기</h2>${calcForm(p)}
 <h2>${lab(m)}원 주택 취득 시 총 부대비용</h2>
-<p>취득세 ${wonKo(r.total)} 외에 중개수수료 최대 ${wonKo(Math.min(p * (p <= 2e8 ? 0.005 : p <= 9e8 ? 0.004 : p <= 12e8 ? 0.005 : p <= 15e8 ? 0.006 : 0.007), p <= 2e8 ? 800000 : Infinity))}(부가세 별도), 법무사 비용 약 30만~60만원, 인지세 ${p > 1e9 ? '35만원' : p > 1e8 ? '15만원' : '없음'}, 국민주택채권 할인 비용이 듭니다. 대략 <strong>매매가의 ${((r.total / p + 0.006) * 100).toFixed(1)}% 안팎</strong>을 취득 비용으로 준비해야 합니다.</p>
+<p>취득세 ${wonKo(r.total)} 외에 중개수수료 최대 ${wonKo(calcBrokerage({ deal: 'sale', price: p, vat: 'none' }).fee)}(부가세 별도), 법무사 비용 약 30만~60만원, 인지세 ${p > 1e9 ? '35만원' : p > 1e8 ? '15만원' : '없음'}, 국민주택채권 할인 비용 약 ${wonKo(Math.round(calcHousingBond({ officialPrice: p * OFFICIAL_RATIO }).cost / 1e4) * 1e4)}(서울·광역시, 공시가격 시세의 67% 가정)이 듭니다. 대략 <strong>매매가의 ${(calcHomeCost({ price: p, income: 6e7 }).purchaseCosts / p * 100).toFixed(1)}% 안팎</strong>을 취득 비용으로 준비해야 합니다.</p>
 <h2>다른 금액 취득세</h2>${priceTable(m)}
 ${ad('inArticle')}${faqHtml(faq.slice(0, 2))}${relatedTools(tools, slug)}`,
       };
