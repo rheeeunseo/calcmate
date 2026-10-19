@@ -299,7 +299,8 @@
         "acquisition-tax",
         "capital-gains-tax"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-10-19"
     },
     {
       "slug": "1sedae-1jutaek-bigwase-12eok",
