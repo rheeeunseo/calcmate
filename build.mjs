@@ -36,7 +36,9 @@ function render(page) {
     config.bingSiteVerification && `<meta name="msvalidate.01" content="${config.bingSiteVerification}">`,
   ].filter(Boolean).join('\n');
   const analytics = config.gaId
-    ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${config.gaId}"></script>\n<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${config.gaId}');</script>`
+    // ?notrack=1 로 한 번 들어오면 그 브라우저의 방문은 통계에서 빠짐 (?track=1 로 해제)
+    ? `<script>(function(){try{var p=new URLSearchParams(location.search),k='cm_notrack';if(p.get('notrack')==='1'&&localStorage.getItem(k)!=='1'){localStorage.setItem(k,'1');alert('이 브라우저의 방문은 이제 방문자 통계에서 빠집니다.');}if(p.get('track')==='1'&&localStorage.getItem(k)==='1'){localStorage.removeItem(k);alert('이 브라우저의 방문이 다시 방문자 통계에 잡힙니다.');}if(localStorage.getItem(k)==='1')window['ga-disable-${config.gaId}']=true;}catch(e){}})();</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=${config.gaId}"></script>\n<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${config.gaId}');</script>`
     : '';
   const adsenseHead = config.adsenseClient
     ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.adsenseClient}" crossorigin="anonymous"></script>`
