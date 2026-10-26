@@ -17,12 +17,12 @@ const urls = [];
 // 검색에 노출할 금액별 하위 페이지. 여기에 없는 하위 페이지는 그대로 만들되 noindex 처리하고 사이트맵에서 뺀다
 // (금액만 다른 유사 페이지가 대량으로 색인되지 않도록).
 const INDEXED_SUBPAGES = {
-  salary: [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000, 9500, 10000, 12000, 15000, 20000],
-  loan: [5000, 10000, 20000, 30000, 50000],
-  'acquisition-tax': [30000, 50000, 70000, 100000, 120000, 150000, 200000],
-  brokerage: [30000, 50000, 100000],
-  'home-cost': [30000, 50000, 70000, 100000, 150000],
-  parttime: [10320, 12000, 15000],
+  salary: [3000, 3500, 4000, 5000, 10000],
+  loan: [10000, 30000],
+  'acquisition-tax': [50000, 120000, 200000], // 12억·20억은 서치 콘솔 노출 확인
+  brokerage: [50000],
+  'home-cost': [50000, 100000],
+  parttime: [10320],
 };
 const isIndexedSub = (slug, subPath) => (INDEXED_SUBPAGES[slug] || []).includes(Number(subPath.split('/').filter(Boolean).pop()));
 
@@ -40,7 +40,8 @@ function render(page) {
     ? `<script>(function(){try{var p=new URLSearchParams(location.search),k='cm_notrack';if(p.get('notrack')==='1'&&localStorage.getItem(k)!=='1'){localStorage.setItem(k,'1');alert('이 브라우저의 방문은 이제 방문자 통계에서 빠집니다.');}if(p.get('track')==='1'&&localStorage.getItem(k)==='1'){localStorage.removeItem(k);alert('이 브라우저의 방문이 다시 방문자 통계에 잡힙니다.');}if(localStorage.getItem(k)==='1')window['ga-disable-${config.gaId}']=true;}catch(e){}})();</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=${config.gaId}"></script>\n<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${config.gaId}');</script>`
     : '';
-  const adsenseHead = config.adsenseClient
+  // 검색에서 숨긴 유사 페이지에는 광고를 넣지 않는다 (애드센스 '가치 없는 콘텐츠' 판정 방지)
+  const adsenseHead = config.adsenseClient && !page.noindex
     ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.adsenseClient}" crossorigin="anonymous"></script>`
     : '';
   const scripts = (page.scripts || []).map((s) => `<script type="module" src="${config.basePath}/js/${s}"></script>`).join('\n');
