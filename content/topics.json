@@ -346,7 +346,8 @@
         "jeonse",
         "loan"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-11-05"
     },
     {
       "slug": "stress-dsr-3dangye-hando",
