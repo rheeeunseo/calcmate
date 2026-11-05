@@ -14,8 +14,8 @@ const DIST = path.join(ROOT, 'dist');
 const layout = await readFile(path.join(ROOT, 'src/layout.html'), 'utf8');
 const urls = [];
 
-// 검색에 노출할 금액별 하위 페이지. 여기에 없는 하위 페이지는 그대로 만들되 noindex 처리하고 사이트맵에서 뺀다
-// (금액만 다른 유사 페이지가 대량으로 색인되지 않도록).
+// 공개할 금액별 하위 페이지. 여기에 없는 하위 페이지는 아예 만들지 않고, 다른 페이지의 링크도 글자만 남긴다
+// (금액만 다른 유사 페이지는 애드센스 '가치가 별로 없는 콘텐츠' 판정 위험).
 const INDEXED_SUBPAGES = {
   salary: [3000, 3500, 4000, 5000, 10000],
   loan: [10000, 30000],
@@ -25,6 +25,10 @@ const INDEXED_SUBPAGES = {
   parttime: [10320],
 };
 const isIndexedSub = (slug, subPath) => (INDEXED_SUBPAGES[slug] || []).includes(Number(subPath.split('/').filter(Boolean).pop()));
+
+// 만들지 않는 하위 페이지로 가는 링크는 풀고 글자만 남긴다
+const DEAD_LINK = new RegExp('<a href="[^"]*?/(' + Object.keys(INDEXED_SUBPAGES).join('|') + ')/([0-9]+)/">([^]*?)</a>', 'g');
+const unlinkRemoved = (html) => html.replace(DEAD_LINK, (m, slug, n, inner) => (INDEXED_SUBPAGES[slug].includes(Number(n)) ? m : inner));
 
 function render(page) {
   const canonical = config.siteUrl + config.basePath + page.path;
@@ -48,7 +52,7 @@ function render(page) {
   const vars = {
     title: page.title.includes(config.siteName) ? page.title : `${page.title} | ${config.siteName}`,
     description: page.description, canonical, siteName: config.siteName, tagline: config.tagline,
-    base: config.basePath, year: new Date().getFullYear(), content: page.content,
+    base: config.basePath, year: new Date().getFullYear(), content: unlinkRemoved(page.content),
     jsonld, verification, adsenseHead, analytics, scripts,
     affiliateNotice: config.coupangPartnerId ? '    <p class="muted">이 사이트는 쿠팡파트너스 활동의 일환으로 일정액의 수수료를 제공받을 수 있습니다.</p>\n' : '',
     robots: page.noindex ? '<meta name="robots" content="noindex, follow">' : '',
@@ -83,7 +87,7 @@ let count = 0;
 for (const p of pages) { await emit(await p(ctx)); count++; }
 for (const tool of tools) {
   await emit({ ...(await tool.page(ctx)), path: `/${tool.slug}/`, priority: 0.9 }); count++;
-  if (tool.pages) for (const sub of await tool.pages(ctx)) { await emit({ ...sub, priority: 0.7, noindex: !isIndexedSub(tool.slug, sub.path) }); count++; }
+  if (tool.pages) for (const sub of await tool.pages(ctx)) { if (!isIndexedSub(tool.slug, sub.path)) continue; await emit({ ...sub, priority: 0.7 }); count++; }
 }
 await emit(renderBlogIndex(ctx)); count++;
 for (const a of articles) { await emit(renderArticlePage(ctx, a)); count++; }
