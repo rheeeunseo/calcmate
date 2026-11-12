@@ -365,7 +365,8 @@
         "acquisition-tax",
         "brokerage"
       ],
-      "status": "pending"
+      "status": "done",
+      "publishedAt": "2026-11-12"
     },
     {
       "slug": "yangdose-pilyogyeongbi-injeong-hangmok",
