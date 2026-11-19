@@ -376,6 +376,16 @@
       ],
       "status": "done",
       "publishedAt": "2026-10-26"
+    },
+    {
+      "slug": "geundangdang-seoljeong-biyong-gyesan",
+      "title": "근저당 설정 비용 계산 - 채권최고액 120%와 등록면허세, 누가 내나",
+      "relatedTools": [
+        "loan",
+        "home-cost"
+      ],
+      "status": "done",
+      "publishedAt": "2026-11-19"
     }
   ]
 }
