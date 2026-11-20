@@ -386,6 +386,15 @@
       ],
       "status": "done",
       "publishedAt": "2026-11-19"
+    },
+    {
+      "slug": "yeonbong-4000-silsuryeong-gyesan",
+      "title": "연봉 4000만원 월 실수령액 292만원 - 공제 항목과 조건별 차이",
+      "relatedTools": [
+        "salary"
+      ],
+      "status": "done",
+      "publishedAt": "2026-11-20"
     }
   ]
 }
